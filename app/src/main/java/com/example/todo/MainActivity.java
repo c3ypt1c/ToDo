@@ -20,17 +20,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
-        assert navHostFragment != null;
-        NavController navController = navHostFragment.getNavController();
-
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
-        View view = super.onCreateView(parent, name, context, attrs);
-        FragmentContainerView fragment = findViewById(R.id.fragmentContainerView);
-        return view;
-    }
 }
