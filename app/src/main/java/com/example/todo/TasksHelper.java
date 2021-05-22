@@ -41,10 +41,10 @@ public class TasksHelper extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()) { // Moves cursor to front line
             do {
-                int taskID = cursor.getInt(0);
-                String taskName = cursor.getString(1);
-                String taskDesk = cursor.getString(2);
-                boolean taskDone = cursor.getInt(3) == 1; // 1 is done
+                int taskID = cursor.getInt(0); //Task ID
+                String taskName = cursor.getString(1); // Title/Name
+                String taskDesk = cursor.getString(2); // Description
+                boolean taskDone = cursor.getInt(3) == 1; // Completed?: 1 is done
                 Task task = new Task(taskID, taskName, taskDesk, taskDone, this);
                 Log.d(TAG, "Created task: \n" + task.toString());
                 Tasks.add(task);
