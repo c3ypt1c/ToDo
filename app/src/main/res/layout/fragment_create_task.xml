@@ -84,7 +84,7 @@
                     android:autofillHints="" />
 
                 <CheckBox
-                    android:id="@+id/activity_add_task_completed_field"
+                    android:id="@+id/fragment_add_task_completed_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"

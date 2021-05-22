@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class TasksHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 0;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_TABLE = "tasksDB";
     private static final String DATABASE_NAME = "tasks";
     private static final String TAG = "Database";

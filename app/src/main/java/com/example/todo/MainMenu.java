@@ -25,18 +25,9 @@ public class MainMenu extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_to_do_main_menu, container, false);
-        view.findViewById(R.id.fragment_to_do_main_menu_fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Get all input elements
-                
-
-                //Put all the values into database
-
-
-                Navigation.findNavController(view).navigate(R.id.action_toDoMainMenu_to_createTask);
-            }
-        });
+        view.findViewById(R.id.fragment_to_do_main_menu_fab).setOnClickListener(
+                v -> Navigation.findNavController(view).navigate(R.id.action_toDoMainMenu_to_createTask)
+            );
         return view;
     }
 }
