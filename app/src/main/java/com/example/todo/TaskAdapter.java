@@ -59,7 +59,7 @@ public class TaskAdapter extends
         holder.done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentTask.setDone(!currentTask.isDone());
+                currentTask.toggleDone();
             }
         });
     }

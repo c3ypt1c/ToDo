@@ -61,6 +61,11 @@ public class Task {
         update();
     }
 
+    public boolean toggleDone() {
+        setDone(!isDone());
+        return isDone();
+    }
+
     @NonNull
     @Override
     public String toString() {

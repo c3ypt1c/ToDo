@@ -46,7 +46,7 @@ public class TasksHelper extends SQLiteOpenHelper {
                 String taskDesk = cursor.getString(2); // Description
                 boolean taskDone = cursor.getInt(3) == 1; // Completed?: 1 is done
                 Task task = new Task(taskID, taskName, taskDesk, taskDone, this);
-                Log.d(TAG, "Created task: \n" + task.toString());
+                Log.d(TAG, "Tasks task: \n" + task.toString());
                 Tasks.add(task);
             } while (cursor.moveToNext());
         }
