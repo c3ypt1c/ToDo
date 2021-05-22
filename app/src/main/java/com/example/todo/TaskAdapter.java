@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class TaskAdapter extends
         RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
     private final ArrayList<Task> Tasks; // Storage for tasks
+    private final View view;
 
     final static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -32,7 +34,8 @@ public class TaskAdapter extends
         }
     }
 
-    public TaskAdapter(Context context, ArrayList<Task> Tasks) {
+    public TaskAdapter(View view, ArrayList<Task> Tasks) {
+        this.view = view;
         this.Tasks = Tasks;
     }
 
@@ -60,6 +63,13 @@ public class TaskAdapter extends
             @Override
             public void onClick(View v) {
                 currentTask.toggleDone();
+            }
+        });
+
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.action_toDoMainMenu_to_editTask);
             }
         });
     }

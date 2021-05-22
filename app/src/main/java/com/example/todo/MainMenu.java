@@ -44,7 +44,7 @@ public class MainMenu extends Fragment {
         if(tasksHelper.getAllTasks().size() > 0) empty.setVisibility(View.GONE);
 
         RecyclerView recyclerView = view.findViewById(R.id.activity_main_recycler_view);
-        TaskAdapter taskAdapter = new TaskAdapter(this.getContext(), tasksHelper.getAllTasks());
+        TaskAdapter taskAdapter = new TaskAdapter(view, tasksHelper.getAllTasks());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerView.setAdapter(taskAdapter);
