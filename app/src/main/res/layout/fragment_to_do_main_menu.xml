@@ -11,18 +11,19 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/activity_main_linear_layout"
+            android:id="@+id/fragment_to_do_main_menu_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/activity_main_toolbar"
+                android:id="@+id/fragment_to_do_main_menu_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/design_default_color_primary"
                 android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
-                app:popupTheme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+                app:popupTheme="@style/Theme.MaterialComponents.Light.DarkActionBar"
+                app:title="@string/app_fragment_main_name"
                 />
 
             <TextView
@@ -40,7 +41,7 @@
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/fragment_to_do_main_menu_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
