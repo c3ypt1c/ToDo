@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/toDoMainMenu">
+    <fragment
+        android:id="@+id/toDoMainMenu"
+        android:name="com.example.todo.MainMenu"
+        android:label="fragment_to_do_main_menu"
+        tools:layout="@layout/fragment_to_do_main_menu" >
+        <action
+            android:id="@+id/action_toDoMainMenu_to_createTask"
+            app:destination="@id/createTask"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
+    </fragment>
+    <fragment
+        android:id="@+id/createTask"
+        android:name="com.example.todo.CreateTask"
+        android:label="fragment_create_task"
+        tools:layout="@layout/fragment_create_task" >
+        <action
+            android:id="@+id/action_createTask_to_toDoMainMenu"
+            app:destination="@id/toDoMainMenu"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+</navigation>

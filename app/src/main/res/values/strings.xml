@@ -1,0 +1,24 @@
+<resources>
+    <!-- "android:label"s -->
+    <string name="app_name">ToDo</string>
+    <string name="app_fragment_main_name">ToDo: Main Menu</string>
+    <string name="app_fragment_add_task_name">ToDo: Add Task</string>
+
+    <!-- Fragment Main -->
+    <string name="fragment_main_empty_indicator_text_view">All done! There are no tasks</string>
+    <string name="fragment_main_add_task">Add Task</string>
+
+    <!-- Fragment CreateTask -->
+    <string name="fragment_add_task_title">Add a Task</string>
+    <string name="fragment_add_task_label">Add Task</string>
+    <string name="fragment_add_task_name">Task Name</string>
+    <string name="fragment_add_description_name">Task Description</string>
+    <string name="fragment_add_task_completed">Completed</string>
+    <string name="fragment_add_task_add_task">Add Task</string>
+
+    <!-- Lorem -->
+    <string name="lorem_ipsum_small">Lorem ipsum dolor sit amet.</string>
+    <string name="lorem_ipsum_medium">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam efficitur felis nunc, vitae sollicitudin lectus volutpat et. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus elementum risus felis, quis venenatis urna condimentum id. Etiam dictum felis ac nulla accumsan finibus. Cras euismod, orci nec fermentum.</string>
+
+
+</resources>
