@@ -1,7 +1,6 @@
 package com.example.todo;
 
 import android.content.ContentValues;
-
 import androidx.annotation.NonNull;
 
 public class Task {

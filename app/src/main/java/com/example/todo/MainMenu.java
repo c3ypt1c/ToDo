@@ -28,6 +28,12 @@ public class MainMenu extends Fragment {
         view.findViewById(R.id.fragment_to_do_main_menu_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Get all input elements
+                
+
+                //Put all the values into database
+
+
                 Navigation.findNavController(view).navigate(R.id.action_toDoMainMenu_to_createTask);
             }
         });
