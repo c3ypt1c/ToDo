@@ -12,22 +12,14 @@
         <action
             android:id="@+id/action_toDoMainMenu_to_createTask"
             app:destination="@id/createTask"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"/>
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/createTask"
         android:name="com.example.todo.CreateTask"
         android:label="fragment_create_task"
-        tools:layout="@layout/fragment_create_task" >
-        <action
-            android:id="@+id/action_createTask_to_toDoMainMenu"
-            app:destination="@id/toDoMainMenu"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
+        tools:layout="@layout/fragment_create_task" />
 </navigation>
