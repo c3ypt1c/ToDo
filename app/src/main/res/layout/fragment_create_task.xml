@@ -45,9 +45,9 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_marginBottom="8dp"
-                    android:labelFor="@+id/fragment_add_task_name_field"
+                    android:labelFor="@id/fragment_add_task_name_field"
                     android:text="@string/fragment_add_task_name"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                     tools:layout_editor_absoluteX="20dp"
                     tools:layout_editor_absoluteY="24dp" />
 
@@ -55,40 +55,33 @@
                     android:id="@+id/fragment_add_task_name_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="8dp"
-                    android:autofillHints=""
-                    android:ems="10"
                     android:inputType="textShortMessage"
-                    android:minHeight="48dp"
-                    android:singleLine="true"
-                    android:text="" />
+                    android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text=""
+                    android:autofillHints="" />
 
                 <TextView
                     android:id="@+id/activity_add_task_description"
-                    android:layout_width="fill_parent"
-                    android:minHeight="48dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="@string/fragment_add_description_name"
                     android:labelFor="@id/fragment_add_task_description_field"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
                 <EditText
                     android:id="@+id/fragment_add_task_description_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
                     android:layout_margin="8dp"
                     android:layout_marginBottom="8dp"
-                    android:gravity="top|start"
-                    android:lines="8"
-                    android:maxLines="10"
-                    android:minLines="6"
-                    android:scrollbars="vertical"
-                    android:autofillHints=""
-                    android:inputType="text" />
+                    android:text=""
+                    android:gravity="top"
+                    android:autofillHints="" />
 
                 <CheckBox
                     android:id="@+id/activity_add_task_completed_field"
