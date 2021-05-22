@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,14 +18,16 @@ public class TaskAdapter extends
 
     private final ArrayList<Task> Tasks; // Storage for tasks
 
-    class TaskViewHolder extends RecyclerView.ViewHolder {
+    final static class TaskViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView title;
+        public final CheckBox done;
         final TaskAdapter taskAdapter;
 
         public TaskViewHolder(@NonNull View itemView, TaskAdapter taskAdapter) {
             super(itemView);
             title = itemView.findViewById(R.id.recycler_item_task_entry_title);
+            done = itemView.findViewById(R.id.recycler_item_task_entry_done);
             this.taskAdapter = taskAdapter;
         }
     }
@@ -36,22 +39,29 @@ public class TaskAdapter extends
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.w("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAa", "IT'S INFLATINGGGGGGGGGGGGGG ");
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        if(layoutInflater == null) Log.w("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAa", "onCreateViewHolder: LayoutInflater null");
-
         View view = layoutInflater.inflate(R.layout.recycler_item_task_entry, parent, false);
-
-        if(view == null) Log.w("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAa", "onCreateViewHolder: view null");
 
         return new TaskViewHolder(view, this);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
-        String currentTitle = Tasks.get(position).getTaskName();
-        Log.w("TaskAdapter:onBindViewHolder", "onBindViewHolder: Bound" + position + " to " + currentTitle);
-        holder.title.setText(currentTitle);
+        Task currentTask = Tasks.get(position);
+
+        Log.w("TaskAdapter:onBindViewHolder", "onBindViewHolder: Bound" + position + " to " + currentTask.getTaskName());
+
+        // Set initial data
+        holder.done.setChecked(currentTask.isDone());
+        holder.title.setText(currentTask.getTaskName());
+
+        // Add listeners
+        holder.done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentTask.setDone(!currentTask.isDone());
+            }
+        });
     }
 
     @Override
