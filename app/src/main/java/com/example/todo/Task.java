@@ -74,4 +74,8 @@ public class Task {
                 "Task desc: " + taskDesc + "\n" +
                 "Task done: " + done + "\n";
     }
+
+    public void Delete() {
+        tasksHelper.RemoveTaskById(id);
+    }
 }

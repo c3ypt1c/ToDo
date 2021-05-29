@@ -99,4 +99,9 @@ public class TasksHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(DATABASE_TABLE, "done = 1", null);
     }
+
+    public void RemoveTaskById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(DATABASE_TABLE, "id = '" + id + "'", null);
+    }
 }
