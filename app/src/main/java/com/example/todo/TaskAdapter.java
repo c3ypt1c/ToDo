@@ -29,6 +29,8 @@ public class TaskAdapter extends
         public final TextView desc;
         public final TextView descTitle;
         public final androidx.appcompat.widget.AppCompatImageButton expand;
+        public final androidx.appcompat.widget.AppCompatImageButton delete;
+        public final View[] collapsable;
         public boolean expanded = false;
         final TaskAdapter taskAdapter;
 
@@ -39,6 +41,9 @@ public class TaskAdapter extends
             descTitle = itemView.findViewById(R.id.recycler_item_task_description);
             desc = itemView.findViewById(R.id.recycler_item_task_description_contents);
             expand = itemView.findViewById(R.id.recycler_item_task_entry_expand_button);
+            delete = itemView.findViewById(R.id.recycler_item_task_delete_button);
+
+            collapsable = new View[] {desc, descTitle, delete}; //Add collapsable-s here
             this.taskAdapter = taskAdapter;
         }
     }
@@ -98,15 +103,12 @@ public class TaskAdapter extends
             public void onClick(View v) {
                 Log.w("AAAAAAAAAAAAAAAAa", "expanded");
                 if(!holder.expanded) {
-                    holder.descTitle.setVisibility(View.VISIBLE);
-                    holder.desc.setVisibility(View.VISIBLE);
+                    for(View element : holder.collapsable) element.setVisibility(View.VISIBLE);
                 } else {
-                    holder.descTitle.setVisibility(View.GONE);
-                    holder.desc.setVisibility(View.GONE);
+                    for(View element : holder.collapsable) element.setVisibility(View.GONE);
                 }
                 holder.expanded = !holder.expanded;
                 view.requestLayout();
-                //view.invalidate();
             }
         });
 

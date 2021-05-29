@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -53,7 +54,9 @@
         android:text="@string/recycler_item_task_description"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="visible"
+        android:animateLayoutChanges="true"
+        />
 
     <TextView
         android:id="@+id/recycler_item_task_description_contents"
@@ -64,14 +67,29 @@
         android:layout_alignParentEnd="true"
         android:paddingStart="8dp"
         android:paddingEnd="0dp"
-        android:visibility="gone"
+        android:visibility="visible"
+        android:animateLayoutChanges="true"
         tools:text="@string/lorem_ipsum_medium" />
+
+    <ImageButton
+        android:id="@+id/recycler_item_task_delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/recycler_item_task_description_contents"
+        android:animateLayoutChanges="true"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        app:srcCompat="@android:drawable/ic_delete"
+        android:contentDescription="@string/recycler_item_task_delete_task" />
 
     <View
         android:id="@+id/recycler_item_task_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/recycler_item_task_description_contents"
+        android:layout_below="@+id/recycler_item_task_delete_button"
         android:background="?android:attr/listDivider" />
 
 
