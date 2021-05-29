@@ -30,5 +30,6 @@
 
     <!-- Misc -->
     <string name="todo">TODO</string>
+    <string name="fragment_create_task_toast">Cannot enter a task with an empty title</string>
 
 </resources>
