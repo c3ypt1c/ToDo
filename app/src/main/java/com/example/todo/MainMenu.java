@@ -38,7 +38,9 @@ public class MainMenu extends Fragment {
         // Get Shared Preferences
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("prem", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        boolean showCompletedTasks = sharedPreferences.getBoolean("showCompletedTasks", true);
+
+        //editor.putBoolean("showCompletedTasks", false);
+        //editor.apply();
 
         // Add navigation to fab
         view.findViewById(R.id.fragment_to_do_main_menu_fab).setOnClickListener(
@@ -52,15 +54,18 @@ public class MainMenu extends Fragment {
         if(tasksHelper.getAllTasks().size() > 0) empty.setVisibility(View.GONE);
 
         RecyclerView recyclerView = view.findViewById(R.id.activity_main_recycler_view);
-        TaskAdapter taskAdapter = new TaskAdapter(view, this, getParentFragmentManager(), tasksHelper.getAllTasks(), showCompletedTasks);
+        TaskAdapter taskAdapter = new TaskAdapter(view, this, getParentFragmentManager(), tasksHelper.getAllTasks(), false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerView.setAdapter(taskAdapter);
 
-        // Add menu to toolbar and set listeners
+        // Add menu to toolbar
         Toolbar toolbar = view.findViewById(R.id.fragment_to_do_main_menu_toolbar);
         toolbar.inflateMenu(R.menu.menu);
-        MainMenu mainMenu = this;
+
+        //((MenuItem)toolbar.findViewById(R.id.menu_remove_finished)).setChecked(sharedPreferences.getBoolean("showCompletedTasks", false));
+
+        //MainMenu mainMenu = this;
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @SuppressLint("NonConstantResourceId") // TODO: Fix.
             @Override
@@ -74,7 +79,8 @@ public class MainMenu extends Fragment {
                         editor.apply();
 
                         // Reload recycler view
-                        taskAdapter.SetCompleted(!item.isChecked());
+                        taskAdapter.SetCompleted(item.isChecked());
+                        taskAdapter.notifyDataSetChanged();
                         recyclerView.forceLayout();
                         return true;
 

@@ -26,12 +26,13 @@ import java.util.ArrayList;
 public class TaskAdapter extends
         RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
-    private ArrayList<Task> AllTasks; // Storage for tasks
-    private ArrayList<Task> DisplayTasks; // Tasks to display
+    private final ArrayList<Task> AllTasks; // Storage for tasks
+    private ArrayList<Task> IncompleteTasks; // Storage for incomplete tasks
     private final View view;
     private final Fragment fragment;
     private final FragmentManager fragmentManager;
     private boolean showCompleted;
+    private final TaskAdapter taskAdapter;
 
     final static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -67,19 +68,17 @@ public class TaskAdapter extends
         this.fragmentManager = fm;
         this.showCompleted = showCompleted;
         this.AllTasks = Tasks;
+        this.taskAdapter = this;
         SetCompleted(showCompleted);
     }
 
     public void SetCompleted(boolean showCompleted) {
         this.showCompleted = showCompleted;
-        if(showCompleted) {
-            ArrayList<Task> notCompletedTasks = new ArrayList<>();
-            // Filter not completed tasks
-            for (Task task : AllTasks) if (!task.isDone()) notCompletedTasks.add(task);
-            this.DisplayTasks = notCompletedTasks;
-        } else {
-            this.DisplayTasks = AllTasks;
-        }
+        ArrayList<Task> notCompletedTasks = new ArrayList<>();
+        // Filter not completed tasks
+        for (Task task : AllTasks) if (!task.isDone()) notCompletedTasks.add(task);
+        this.IncompleteTasks = notCompletedTasks;
+
     }
 
     @NonNull
@@ -93,7 +92,7 @@ public class TaskAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
-        Task currentTask = DisplayTasks.get(position);
+        Task currentTask = (!showCompleted ? IncompleteTasks : AllTasks).get(position);
 
         Log.w("TaskAdapter:onBindViewHolder", "onBindViewHolder: Bound" + position + " to " + currentTask.getTaskName());
 
@@ -104,10 +103,25 @@ public class TaskAdapter extends
 
 
         // Add listeners
+        // On check
         holder.done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentTask.toggleDone();
+
+                // Update List
+                if(currentTask.isDone()) {
+                    IncompleteTasks.remove(currentTask);
+                } else {
+                    IncompleteTasks.add(currentTask);
+                }
+
+                // Notify
+                if(!showCompleted) {
+                    taskAdapter.notifyItemRemoved(position);
+                    taskAdapter.notifyItemChanged(position, getItemCount());
+                    taskAdapter.notifyDataSetChanged();
+                }
             }
         });
 
@@ -188,7 +202,7 @@ public class TaskAdapter extends
 
     @Override
     public int getItemCount() {
-        return DisplayTasks.size();
+        return (!showCompleted ? IncompleteTasks : AllTasks).size();
     }
 
 }
