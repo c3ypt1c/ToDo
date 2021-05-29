@@ -81,7 +81,7 @@ public class EditTask extends Fragment {
                 task.setTaskDesc(taskDescField.getText().toString());
                 task.setDone(taskCompleted.isChecked());
 
-                Navigation.findNavController(view).navigate(R.id.action_editTask_to_toDoMainMenu);
+                Navigation.findNavController(view).popBackStack(R.id.editTask, true);
             }
         });
 

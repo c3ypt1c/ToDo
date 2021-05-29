@@ -50,7 +50,7 @@ public class CreateTask extends Fragment {
                 tasksHelper.AddTask(titleText, descriptionText, completed);
 
 
-                Navigation.findNavController(view).navigate(R.id.action_createTask_to_toDoMainMenu);
+                Navigation.findNavController(view).popBackStack(R.id.createTask, true);
             }
         });
 
