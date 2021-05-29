@@ -30,8 +30,6 @@ public class TaskAdapter extends
 
     private final ArrayList<Task> Tasks; // Storage for tasks
     private final View view;
-    private final FragmentManager fragmentManager;
-    private final Fragment fragment;
 
     final static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -47,11 +45,9 @@ public class TaskAdapter extends
         }
     }
 
-    public TaskAdapter(View view, Fragment fragment, ArrayList<Task> Tasks) {
+    public TaskAdapter(View view, ArrayList<Task> Tasks) {
         this.view = view;
         this.Tasks = Tasks;
-        this.fragment = fragment;
-        this.fragmentManager = fragment.getParentFragmentManager();
     }
 
     @NonNull
@@ -86,15 +82,6 @@ public class TaskAdapter extends
             @Override
             public void onClick(View v) {
                 Log.w("AAAAAA", "onClick: Clicked!");
-
-                fragmentManager.setFragmentResultListener("edit_id", fragment, new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull @NotNull String requestKey, @NonNull @NotNull Bundle result) {
-                        holder.done.setChecked(currentTask.isDone());
-                        holder.title.setText(currentTask.getTaskName());
-                        Log.w("AAAAAA", "onClick: Updated!");
-                    }
-                });
 
                 SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("internal_temporary", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
