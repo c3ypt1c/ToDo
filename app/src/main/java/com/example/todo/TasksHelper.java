@@ -71,6 +71,24 @@ public class TasksHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Task added");
     }
 
+    public Task GetTaskById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String select = "SELECT * FROM " + DATABASE_TABLE + " WHERE id = '" + id + "'"; //TODO: Refactor.
+        Cursor cursor = db.rawQuery(select, null);
+        cursor.moveToFirst(); //Somehow important given there will always be 1 result.
+
+        Log.w(TAG, "GetTaskById: " + cursor.getCount());
+
+        int taskID = cursor.getInt(0); //Task ID TODO: Fix, slightly wasteful
+        String taskName = cursor.getString(1); // Title/Name
+        String taskDesk = cursor.getString(2); // Description
+        boolean taskDone = cursor.getInt(3) == 1; // Completed?: 1 is done
+        Task task = new Task(taskID, taskName, taskDesk, taskDone, this);
+
+        cursor.close();
+        return task;
+    }
+
     public void RemoveAllTasks() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE " + DATABASE_TABLE);
