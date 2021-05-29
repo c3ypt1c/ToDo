@@ -36,6 +36,18 @@ public class EditTask extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_task, container, false);
 
+        // Add back arrow to actionBar
+        Toolbar toolBar = view.findViewById(R.id.fragment_edit_task_toolbar);
+        toolBar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.clearFocus(); // Remove keyboard from view
+                // Go back to menu
+                Navigation.findNavController(view).popBackStack(R.id.editTask, true);
+            }
+        });
+
         // Get id from preferences then get task
         SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("internal_temporary", Context.MODE_PRIVATE);
         int taskId = sharedPreferences.getInt("last_edit_id", -1);
@@ -79,7 +91,7 @@ public class EditTask extends Fragment {
                 task.setTaskDesc(taskDescField.getText().toString());
                 task.setDone(taskCompleted.isChecked());
 
-                view.clearFocus(); //Remove keyboard from view
+                view.clearFocus(); // Remove keyboard from view
                 Navigation.findNavController(view).popBackStack(R.id.editTask, true);
             }
         });

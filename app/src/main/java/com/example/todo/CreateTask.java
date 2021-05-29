@@ -2,6 +2,7 @@ package com.example.todo;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -31,6 +32,18 @@ public class CreateTask extends Fragment {
             @Override
             public void onClick(View v) {
                 // Get all resources
+
+                // Add back arrow to actionBar
+                Toolbar toolBar = view.findViewById(R.id.fragment_edit_task_toolbar);
+                toolBar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
+                toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        view.clearFocus(); // Remove keyboard from view
+                        // Go back to menu
+                        Navigation.findNavController(view).popBackStack(R.id.createTask, true);
+                    }
+                });
 
                 // Title
                 EditText nameField = view.findViewById(R.id.fragment_add_task_name_field);
