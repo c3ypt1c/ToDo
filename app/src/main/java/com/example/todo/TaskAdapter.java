@@ -1,7 +1,9 @@
 package com.example.todo;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
@@ -82,6 +85,7 @@ public class TaskAdapter extends
             }
         });
 
+        // Edit task
         holder.title.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ApplySharedPref")
             @Override
@@ -98,6 +102,7 @@ public class TaskAdapter extends
             }
         });
 
+        // collapse
         holder.expand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +117,30 @@ public class TaskAdapter extends
             }
         });
 
+        // delete
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get confirm
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+
+                alertDialogBuilder.setTitle("Confirm Delete?");
+                alertDialogBuilder.setMessage("Are you sure you would like to delete task: '" + currentTask.getTaskName() + "'");
+                alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        currentTask.Delete();
+                        Toast toast = Toast.makeText(view.getContext(), "Task deleted!", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
+                alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {} // Do nothing
+                });
+                alertDialogBuilder.create().show();
+            }
+        });
     }
 
     @Override
