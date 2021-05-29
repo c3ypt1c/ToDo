@@ -49,7 +49,7 @@ public class CreateTask extends Fragment {
                 TasksHelper tasksHelper = new TasksHelper(getContext());
                 tasksHelper.AddTask(titleText, descriptionText, completed);
 
-
+                view.clearFocus(); //Remove keyboard from view
                 Navigation.findNavController(view).popBackStack(R.id.createTask, true);
             }
         });

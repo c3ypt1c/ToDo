@@ -2,6 +2,7 @@ package com.example.todo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -81,6 +82,7 @@ public class EditTask extends Fragment {
                 task.setTaskDesc(taskDescField.getText().toString());
                 task.setDone(taskCompleted.isChecked());
 
+                view.clearFocus(); //Remove keyboard from view
                 Navigation.findNavController(view).popBackStack(R.id.editTask, true);
             }
         });
