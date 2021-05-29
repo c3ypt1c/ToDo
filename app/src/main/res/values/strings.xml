@@ -21,6 +21,7 @@
     <string name="lorem_ipsum_medium">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam efficitur felis nunc, vitae sollicitudin lectus volutpat et. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus elementum risus felis, quis venenatis urna condimentum id. Etiam dictum felis ac nulla accumsan finibus. Cras euismod, orci nec fermentum.</string>
     <string name="todo">TODO</string>
     <string name="fragment_edit_task_update_task">Update Task</string>
+    <string name="fragment_edit_task_toolbar_title">Todo: Edit </string>
 
 
 </resources>

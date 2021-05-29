@@ -21,7 +21,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/Theme.MaterialComponents.Light.DarkActionBar"
-            app:title="Todo: Edit {}" />
+            app:title="@string/fragment_edit_task_toolbar_title" />
 
         <ScrollView
             android:id="@+id/fragment_edit_task_scroll_view"
