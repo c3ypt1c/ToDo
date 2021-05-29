@@ -115,10 +115,16 @@ public class TaskAdapter extends
         holder.expand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.w("AAAAAAAAAAAAAAAAa", "expanded");
                 if(!holder.expanded) {
                     for(View element : holder.collapsable) element.setVisibility(View.VISIBLE);
                     holder.expand.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
+
+                    // Hide the description if the description is empty
+                    if(currentTask.getTaskDesc().length() == 0) {
+                        holder.descTitle.setVisibility(View.GONE);
+                        holder.desc.setVisibility(View.GONE);
+                    }
+                    
                 } else {
                     for(View element : holder.collapsable) element.setVisibility(View.GONE);
                     holder.expand.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
