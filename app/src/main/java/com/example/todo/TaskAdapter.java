@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +27,8 @@ public class TaskAdapter extends
 
     private final ArrayList<Task> Tasks; // Storage for tasks
     private final View view;
+    private final Fragment fragment;
+    private final FragmentManager fragmentManager;
 
     final static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -33,6 +38,7 @@ public class TaskAdapter extends
         public final TextView descTitle;
         public final androidx.appcompat.widget.AppCompatImageButton expand;
         public final androidx.appcompat.widget.AppCompatImageButton delete;
+        public final View itemView;
         public final View[] collapsable;
         public boolean expanded = false;
         final TaskAdapter taskAdapter;
@@ -45,15 +51,18 @@ public class TaskAdapter extends
             desc = itemView.findViewById(R.id.recycler_item_task_description_contents);
             expand = itemView.findViewById(R.id.recycler_item_task_entry_expand_button);
             delete = itemView.findViewById(R.id.recycler_item_task_delete_button);
+            this.itemView = itemView;
 
             collapsable = new View[] {desc, descTitle, delete}; //Add collapsable-s here
             this.taskAdapter = taskAdapter;
         }
     }
 
-    public TaskAdapter(View view, ArrayList<Task> Tasks) {
+    public TaskAdapter(View view, Fragment fragment, FragmentManager fm, ArrayList<Task> Tasks) {
         this.view = view;
         this.Tasks = Tasks;
+        this.fragment = fragment;
+        this.fragmentManager = fm;
     }
 
     @NonNull
@@ -132,6 +141,15 @@ public class TaskAdapter extends
                         currentTask.Delete();
                         Toast toast = Toast.makeText(view.getContext(), "Task deleted!", Toast.LENGTH_SHORT);
                         toast.show();
+
+                        //Make recycler disappear on delete, hacky method but works.
+                        FragmentTransaction tr = fragmentManager.beginTransaction();
+                        tr.detach(fragment);
+                        tr.commit();
+
+                        tr = fragmentManager.beginTransaction();
+                        tr.attach(fragment);
+                        tr.commit();
                     }
                 });
                 alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
