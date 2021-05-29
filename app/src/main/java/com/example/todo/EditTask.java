@@ -78,7 +78,7 @@ public class EditTask extends Fragment {
             public void onClick(View v) {
                 // Submit changes to database
                 task.setTaskName(taskNameField.getText().toString());
-                task.setTaskDesc(taskNameField.getText().toString());
+                task.setTaskDesc(taskDescField.getText().toString());
                 task.setDone(taskCompleted.isChecked());
 
                 Navigation.findNavController(view).navigate(R.id.action_editTask_to_toDoMainMenu);
