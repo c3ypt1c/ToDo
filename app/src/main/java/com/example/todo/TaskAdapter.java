@@ -19,16 +19,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.AppCompatImageButton;
 
 import java.util.ArrayList;
 
 public class TaskAdapter extends
         RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
-    private final ArrayList<Task> Tasks; // Storage for tasks
+    private ArrayList<Task> AllTasks; // Storage for tasks
+    private ArrayList<Task> DisplayTasks; // Tasks to display
     private final View view;
     private final Fragment fragment;
     private final FragmentManager fragmentManager;
+    private boolean showCompleted;
 
     final static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -36,8 +39,8 @@ public class TaskAdapter extends
         public final CheckBox done;
         public final TextView desc;
         public final TextView descTitle;
-        public final androidx.appcompat.widget.AppCompatImageButton expand;
-        public final androidx.appcompat.widget.AppCompatImageButton delete;
+        public final AppCompatImageButton expand;
+        public final AppCompatImageButton delete;
         public final View itemView;
         public final View[] collapsable;
         public boolean expanded = false;
@@ -58,11 +61,25 @@ public class TaskAdapter extends
         }
     }
 
-    public TaskAdapter(View view, Fragment fragment, FragmentManager fm, ArrayList<Task> Tasks) {
+    public TaskAdapter(View view, Fragment fragment, FragmentManager fm, ArrayList<Task> Tasks, boolean showCompleted) {
         this.view = view;
-        this.Tasks = Tasks;
         this.fragment = fragment;
         this.fragmentManager = fm;
+        this.showCompleted = showCompleted;
+        this.AllTasks = Tasks;
+        SetCompleted(showCompleted);
+    }
+
+    public void SetCompleted(boolean showCompleted) {
+        this.showCompleted = showCompleted;
+        if(showCompleted) {
+            ArrayList<Task> notCompletedTasks = new ArrayList<>();
+            // Filter not completed tasks
+            for (Task task : AllTasks) if (!task.isDone()) notCompletedTasks.add(task);
+            this.DisplayTasks = notCompletedTasks;
+        } else {
+            this.DisplayTasks = AllTasks;
+        }
     }
 
     @NonNull
@@ -76,7 +93,7 @@ public class TaskAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
-        Task currentTask = Tasks.get(position);
+        Task currentTask = DisplayTasks.get(position);
 
         Log.w("TaskAdapter:onBindViewHolder", "onBindViewHolder: Bound" + position + " to " + currentTask.getTaskName());
 
@@ -124,7 +141,7 @@ public class TaskAdapter extends
                         holder.descTitle.setVisibility(View.GONE);
                         holder.desc.setVisibility(View.GONE);
                     }
-                    
+
                 } else {
                     for(View element : holder.collapsable) element.setVisibility(View.GONE);
                     holder.expand.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
@@ -171,7 +188,7 @@ public class TaskAdapter extends
 
     @Override
     public int getItemCount() {
-        return Tasks.size();
+        return DisplayTasks.size();
     }
 
 }

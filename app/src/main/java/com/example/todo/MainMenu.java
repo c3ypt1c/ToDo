@@ -1,5 +1,8 @@
 package com.example.todo;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,9 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +35,11 @@ public class MainMenu extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_to_do_main_menu, container, false);
 
+        // Get Shared Preferences
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("prem", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        boolean showCompletedTasks = sharedPreferences.getBoolean("showCompletedTasks", true);
+
         // Add navigation to fab
         view.findViewById(R.id.fragment_to_do_main_menu_fab).setOnClickListener(
                 v -> Navigation.findNavController(view).navigate(R.id.action_toDoMainMenu_to_createTask)
@@ -42,10 +52,38 @@ public class MainMenu extends Fragment {
         if(tasksHelper.getAllTasks().size() > 0) empty.setVisibility(View.GONE);
 
         RecyclerView recyclerView = view.findViewById(R.id.activity_main_recycler_view);
-        TaskAdapter taskAdapter = new TaskAdapter(view, this, getParentFragmentManager(), tasksHelper.getAllTasks());
+        TaskAdapter taskAdapter = new TaskAdapter(view, this, getParentFragmentManager(), tasksHelper.getAllTasks(), showCompletedTasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerView.setAdapter(taskAdapter);
+
+        // Add menu to toolbar and set listeners
+        Toolbar toolbar = view.findViewById(R.id.fragment_to_do_main_menu_toolbar);
+        toolbar.inflateMenu(R.menu.menu);
+        MainMenu mainMenu = this;
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @SuppressLint("NonConstantResourceId") // TODO: Fix.
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                switch (itemId) {
+                    case R.id.menu_show_finished:
+                        // Handle check and update settings
+                        item.setChecked(!item.isChecked());
+                        editor.putBoolean("showCompletedTasks", item.isChecked());
+                        editor.apply();
+
+                        // Reload recycler view
+                        taskAdapter.SetCompleted(!item.isChecked());
+                        recyclerView.forceLayout();
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
+
         Log.w("AAAAAAAAAAAAAAa", "onCreateView: "+taskAdapter.getItemCount());
 
         return view;
