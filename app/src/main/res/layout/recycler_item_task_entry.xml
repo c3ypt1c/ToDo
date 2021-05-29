@@ -39,6 +39,7 @@
         android:layout_alignTop="@+id/recycler_item_task_entry_done"
         android:layout_alignBottom="@+id/recycler_item_task_entry_done"
         android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_baseline_arrow_drop_down_24"
         android:contentDescription="@string/todo"
         />
 

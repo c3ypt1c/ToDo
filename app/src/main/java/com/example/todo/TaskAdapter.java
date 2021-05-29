@@ -118,8 +118,10 @@ public class TaskAdapter extends
                 Log.w("AAAAAAAAAAAAAAAAa", "expanded");
                 if(!holder.expanded) {
                     for(View element : holder.collapsable) element.setVisibility(View.VISIBLE);
+                    holder.expand.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
                 } else {
                     for(View element : holder.collapsable) element.setVisibility(View.GONE);
+                    holder.expand.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
                 }
                 holder.expanded = !holder.expanded;
                 view.requestLayout();
