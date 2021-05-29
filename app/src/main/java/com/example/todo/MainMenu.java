@@ -50,14 +50,15 @@ public class MainMenu extends Fragment {
         // Get Data
         TasksHelper tasksHelper = new TasksHelper(getContext());
 
-        TextView empty = view.findViewById(R.id.activity_main_empty_indicator_text_view);
-        if(tasksHelper.getAllTasks().size() > 0) empty.setVisibility(View.GONE);
-
+        // Set up RecyclerView and TaskAdapter
         RecyclerView recyclerView = view.findViewById(R.id.activity_main_recycler_view);
         TaskAdapter taskAdapter = new TaskAdapter(view, this, getParentFragmentManager(), tasksHelper.getAllTasks(), false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         recyclerView.setAdapter(taskAdapter);
+
+        // TextView for empty tasks
+        TextView empty = view.findViewById(R.id.activity_main_empty_indicator_text_view);
+        if(taskAdapter.getItemCount() > 0) empty.setVisibility(View.GONE);
 
         // Add menu to toolbar
         Toolbar toolbar = view.findViewById(R.id.fragment_to_do_main_menu_toolbar);
@@ -82,7 +83,23 @@ public class MainMenu extends Fragment {
                         taskAdapter.SetCompleted(item.isChecked());
                         taskAdapter.notifyDataSetChanged();
                         recyclerView.forceLayout();
+
+                        // Update text view, just in case. Still bugged when clicking on the checkbox though.
+                        if(taskAdapter.getItemCount() > 0) empty.setVisibility(View.GONE);
+                        else empty.setVisibility(View.VISIBLE);
+
                         return true;
+
+                    case R.id.menu_remove_finished: //TODO needs alert
+                        // Remove all finished tasks
+                        tasksHelper.RemovedAllFinishedTasks();
+                        taskAdapter.UpdateTaskList(tasksHelper.getAllTasks());
+                        taskAdapter.notifyDataSetChanged();
+                        recyclerView.forceLayout();
+
+                        // Update text view, just in case. Still bugged when clicking on the checkbox though.
+                        if(taskAdapter.getItemCount() > 0) empty.setVisibility(View.GONE);
+                        else empty.setVisibility(View.VISIBLE);
 
                     default:
                         return false;

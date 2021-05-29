@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class TaskAdapter extends
         RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
-    private final ArrayList<Task> AllTasks; // Storage for tasks
+    private ArrayList<Task> AllTasks; // Storage for tasks
     private ArrayList<Task> IncompleteTasks; // Storage for incomplete tasks
     private final View view;
     private final Fragment fragment;
@@ -70,6 +70,15 @@ public class TaskAdapter extends
         this.AllTasks = Tasks;
         this.taskAdapter = this;
         SetCompleted(showCompleted);
+    }
+
+    public void UpdateTaskList(ArrayList<Task> tasks) {
+        this.AllTasks = tasks;
+
+        ArrayList<Task> notCompletedTasks = new ArrayList<>();
+        // Filter not completed tasks
+        for (Task task : AllTasks) if (!task.isDone()) notCompletedTasks.add(task);
+        this.IncompleteTasks = notCompletedTasks;
     }
 
     public void SetCompleted(boolean showCompleted) {
