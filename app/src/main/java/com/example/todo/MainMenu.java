@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,20 +45,19 @@ public class MainMenu extends Fragment {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("prem", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        //editor.putBoolean("showCompletedTasks", false);
-        //editor.apply();
-
         // Add navigation to fab
         view.findViewById(R.id.fragment_to_do_main_menu_fab).setOnClickListener(
                 v -> Navigation.findNavController(view).navigate(R.id.action_toDoMainMenu_to_createTask)
             );
 
-        // Get Data
+        // Get saved data
         tasksHelper = new TasksHelper(getContext());
+        boolean showCompleted = sharedPreferences.getBoolean("showCompletedTasks", false);
+
 
         // Set up RecyclerView and TaskAdapter
         recyclerView = view.findViewById(R.id.activity_main_recycler_view);
-        taskAdapter = new TaskAdapter(view, this, getParentFragmentManager(), tasksHelper.getAllTasks(), false);
+        taskAdapter = new TaskAdapter(view, this, getParentFragmentManager(), tasksHelper.getAllTasks(), showCompleted);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(taskAdapter);
 
@@ -69,9 +69,11 @@ public class MainMenu extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.fragment_to_do_main_menu_toolbar);
         toolbar.inflateMenu(R.menu.menu);
 
-        //((MenuItem)toolbar.findViewById(R.id.menu_remove_finished)).setChecked(sharedPreferences.getBoolean("showCompletedTasks", false));
+        // Set values for menu
+        Menu menu = toolbar.getMenu();
+        menu.findItem(R.id.menu_show_finished).setChecked(showCompleted);
 
-        //MainMenu mainMenu = this;
+        // Add listener to menus
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @SuppressLint("NonConstantResourceId") // TODO: Fix.
             @Override
@@ -102,13 +104,14 @@ public class MainMenu extends Fragment {
                         updateRecycler();
                         return true;
 
+                    case R.id.menu_toggle_all:
+
+
                     default:
                         return false;
                 }
             }
         });
-
-        Log.w("AAAAAAAAAAAAAAa", "onCreateView: "+taskAdapter.getItemCount());
 
         return view;
     }
@@ -118,7 +121,7 @@ public class MainMenu extends Fragment {
         taskAdapter.notifyDataSetChanged();
         recyclerView.forceLayout();
 
-        // Update text view, just in case. Still bugged when clicking on the checkbox though.
+        // Update text view, just in case.
         if(taskAdapter.getItemCount() > 0) empty.setVisibility(View.GONE);
         else empty.setVisibility(View.VISIBLE);
     }
