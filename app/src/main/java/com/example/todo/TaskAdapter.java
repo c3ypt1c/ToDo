@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +30,7 @@ public class TaskAdapter extends
     private final MainMenu fragment;
     private final FragmentManager fragmentManager;
     private boolean showCompleted;
+    private final boolean isLandscape;
 
     final static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -41,6 +42,7 @@ public class TaskAdapter extends
         public final AppCompatImageButton delete;
         public final View itemView;
         public final View[] collapsable;
+        public final View[] collapsableLandscape;
         final TaskAdapter taskAdapter;
 
         public TaskViewHolder(@NonNull View itemView, TaskAdapter taskAdapter) {
@@ -54,11 +56,12 @@ public class TaskAdapter extends
             this.itemView = itemView;
 
             collapsable = new View[] {desc, descTitle, delete}; //Add collapsable-s here
+            collapsableLandscape = new View[] {desc, descTitle};
             this.taskAdapter = taskAdapter;
         }
 
         public void Expand() {
-            for(View element : collapsable) element.setVisibility(View.VISIBLE);
+            for(View element : taskAdapter.isLandscape ? collapsableLandscape : collapsable) element.setVisibility(View.VISIBLE);
             expand.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
 
             // Hide the description if the description is empty
@@ -69,7 +72,7 @@ public class TaskAdapter extends
         }
 
         public void Collapse() {
-            for(View element : collapsable) element.setVisibility(View.GONE);
+            for (View element : taskAdapter.isLandscape ? collapsableLandscape : collapsable) element.setVisibility(View.GONE);
             expand.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
         }
     }
@@ -80,6 +83,7 @@ public class TaskAdapter extends
         this.fragmentManager = fm;
         this.showCompleted = showCompleted;
         this.AllTasks = Tasks;
+        this.isLandscape = view.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE; //Check if landscape
         SetCompleted(showCompleted);
     }
 
@@ -114,12 +118,17 @@ public class TaskAdapter extends
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
         // Set internals
         Task currentTask = (!showCompleted ? IncompleteTasks : AllTasks).get(position);
-        Log.w("TASKSSSS:", currentTask.toString());
 
         // Set initial data
         holder.done.setChecked(currentTask.isDone());
         holder.title.setText(currentTask.getTaskName());
         holder.desc.setText(currentTask.getTaskDesc());
+
+        // Landscape management
+        if(isLandscape) {
+            if(currentTask.getTaskDesc().length() == 0) holder.expand.setVisibility(View.GONE);
+            else holder.expand.setVisibility(View.VISIBLE);
+        }
 
         // Set saved expand status
         if(currentTask.getExpand()) holder.Expand();
