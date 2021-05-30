@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
@@ -32,6 +34,9 @@ public class MainMenu extends Fragment {
     RecyclerView recyclerView;
     TasksHelper tasksHelper;
     TextView empty;
+    Menu menu;
+
+    boolean showCompleted;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +60,7 @@ public class MainMenu extends Fragment {
 
         // Get saved data
         tasksHelper = new TasksHelper(getContext());
-        boolean showCompleted = sharedPreferences.getBoolean("showCompletedTasks", false);
-        boolean displayCollapse = sharedPreferences.getBoolean("displayCollapse", true);
+        showCompleted = sharedPreferences.getBoolean("showCompletedTasks", false);
 
         // Set up RecyclerView and TaskAdapter
         recyclerView = view.findViewById(R.id.activity_main_recycler_view);
@@ -73,10 +77,10 @@ public class MainMenu extends Fragment {
         toolbar.inflateMenu(R.menu.menu);
 
         // Set values for menu
-        Menu menu = toolbar.getMenu();
+        menu = toolbar.getMenu();
         menu.findItem(R.id.menu_show_finished).setChecked(showCompleted);
 
-        menu.findItem(R.id.menu_toggle_all).setTitle(getString( displayCollapse ? R.string.menu_collapse_all : R.string.menu_expand_all));
+        menu.findItem(R.id.menu_toggle_all).setTitle(getString( shouldCollapse() ? R.string.menu_collapse_all : R.string.menu_expand_all));
 
         // Add listener to menus
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -88,12 +92,13 @@ public class MainMenu extends Fragment {
                     case R.id.menu_show_finished:
                         // Handle check and update settings
                         item.setChecked(!item.isChecked());
+                        showCompleted = item.isChecked();
                         editor.putBoolean("showCompletedTasks", item.isChecked());
                         editor.apply();
 
                         // Reload recycler view
                         taskAdapter.SetCompleted(item.isChecked());
-                        updateRecycler();
+                        updateFragmentChildViews();
                         return true;
 
                     case R.id.menu_remove_finished: {
@@ -109,7 +114,7 @@ public class MainMenu extends Fragment {
                                 Toast toast = Toast.makeText(view.getContext(), "Tasks deleted!", Toast.LENGTH_SHORT);
                                 toast.show();
                                 tasksHelper.RemoveAllFinishedTasks();
-                                updateRecycler();
+                                updateFragmentChildViews();
                             }
                         });
                         alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -133,7 +138,7 @@ public class MainMenu extends Fragment {
                                 Toast toast = Toast.makeText(view.getContext(), "All tasks deleted!", Toast.LENGTH_SHORT);
                                 toast.show();
                                 tasksHelper.RemoveAllTasks();
-                                updateRecycler();
+                                updateFragmentChildViews();
                             }
                         });
                         alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -145,18 +150,10 @@ public class MainMenu extends Fragment {
                         return true;
                     }
                     case R.id.menu_toggle_all:
-                        // Get value and save user choice
-                        boolean displayCollapse = sharedPreferences.getBoolean("displayCollapse", true);
-                        displayCollapse = !displayCollapse;
-                        editor.putBoolean("displayCollapse", displayCollapse);
-                        editor.apply();
-
-                        // Set the string in the menu
-                        menu.findItem(R.id.menu_toggle_all).setTitle(getString(displayCollapse ? R.string.menu_collapse_all : R.string.menu_expand_all));
-
-                        // Perform action
-                        tasksHelper.SetExpandStatus(displayCollapse);
-                        updateRecycler();
+                        // Perform update
+                        boolean shouldCollapse = !shouldCollapse();
+                        tasksHelper.SetExpandStatus(shouldCollapse);
+                        updateFragmentChildViews();
                         return true;
 
                     default:
@@ -168,14 +165,46 @@ public class MainMenu extends Fragment {
         return view;
     }
 
-    void updateRecycler() {
-        taskAdapter.UpdateTaskList(tasksHelper.getAllTasks());
-        taskAdapter.notifyDataSetChanged();
-        recyclerView.forceLayout();
-
+    /**
+     * The function refreshes the views in the fragment
+     */
+    void updateFragmentChildViews(Boolean shouldCollapse) {
         // Update text view, just in case.
         if(taskAdapter.getItemCount() > 0) empty.setVisibility(View.GONE);
         else empty.setVisibility(View.VISIBLE);
+
+        // Set the visuals in the menu and set expand status
+        MenuItem collapseItem = menu.findItem(R.id.menu_toggle_all);
+        if(taskAdapter.getItemCount() == 0) collapseItem.setVisible(false);
+        else {
+            collapseItem.setVisible(true);
+            collapseItem.setTitle(getString(shouldCollapse ? R.string.menu_collapse_all : R.string.menu_expand_all));
+        }
+
+        // Update adapter
+        taskAdapter.UpdateTaskList(tasksHelper.getAllTasks());
+        taskAdapter.notifyDataSetChanged();
+        recyclerView.requestLayout(); // might need forceLayout
+    }
+
+    void updateFragmentChildViews() {
+        updateFragmentChildViews(shouldCollapse());
+    }
+
+    boolean shouldCollapse() {
+        // Check collapse
+        boolean shouldCollapse = true;
+        for (Task task : tasksHelper.getAllTasks()) {
+            // Skip tasks that don't show on recycler
+            if (!showCompleted && task.isDone()) continue;
+
+            // check if should collapse
+            if(!task.getExpand()) {
+                shouldCollapse = false;
+                break;
+            }
+        }
+        return shouldCollapse;
     }
 
 }

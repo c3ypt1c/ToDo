@@ -148,7 +148,7 @@ public class TaskAdapter extends
                     IncompleteTasks.add(currentTask);
                 }
 
-                if(!showCompleted) fragment.updateRecycler();
+                if(!showCompleted) fragment.updateFragmentChildViews();
             }
         });
 
@@ -172,7 +172,7 @@ public class TaskAdapter extends
             public void onClick(View v) {
                 if(currentTask.toggleExpand()) holder.Expand();
                 else holder.Collapse();
-
+                fragment.updateFragmentChildViews();
                 view.requestLayout();
             }
         });
