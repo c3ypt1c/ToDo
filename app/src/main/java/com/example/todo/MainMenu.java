@@ -81,25 +81,21 @@ public class MainMenu extends Fragment {
 
                         // Reload recycler view
                         taskAdapter.SetCompleted(item.isChecked());
-                        taskAdapter.notifyDataSetChanged();
-                        recyclerView.forceLayout();
-
-                        // Update text view, just in case. Still bugged when clicking on the checkbox though.
-                        if(taskAdapter.getItemCount() > 0) empty.setVisibility(View.GONE);
-                        else empty.setVisibility(View.VISIBLE);
+                        updateRecycler(taskAdapter, recyclerView, tasksHelper, empty);
 
                         return true;
 
                     case R.id.menu_remove_finished: //TODO needs alert
                         // Remove all finished tasks
                         tasksHelper.RemovedAllFinishedTasks();
-                        taskAdapter.UpdateTaskList(tasksHelper.getAllTasks());
-                        taskAdapter.notifyDataSetChanged();
-                        recyclerView.forceLayout();
+                        updateRecycler(taskAdapter, recyclerView, tasksHelper, empty);
+                        return true;
 
-                        // Update text view, just in case. Still bugged when clicking on the checkbox though.
-                        if(taskAdapter.getItemCount() > 0) empty.setVisibility(View.GONE);
-                        else empty.setVisibility(View.VISIBLE);
+                    case R.id.menu_remove_all:
+                        // Remove all tasks
+                        tasksHelper.RemoveAllTasks();
+                        updateRecycler(taskAdapter, recyclerView, tasksHelper, empty);
+                        return true;
 
                     default:
                         return false;
@@ -110,6 +106,16 @@ public class MainMenu extends Fragment {
         Log.w("AAAAAAAAAAAAAAa", "onCreateView: "+taskAdapter.getItemCount());
 
         return view;
+    }
+
+    void updateRecycler(TaskAdapter taskAdapter, RecyclerView recyclerView, TasksHelper tasksHelper, TextView empty) {
+        taskAdapter.UpdateTaskList(tasksHelper.getAllTasks());
+        taskAdapter.notifyDataSetChanged();
+        recyclerView.forceLayout();
+
+        // Update text view, just in case. Still bugged when clicking on the checkbox though.
+        if(taskAdapter.getItemCount() > 0) empty.setVisibility(View.GONE);
+        else empty.setVisibility(View.VISIBLE);
     }
 
 }
