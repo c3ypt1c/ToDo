@@ -3,6 +3,10 @@ package com.example.todo;
 import android.content.ContentValues;
 import androidx.annotation.NonNull;
 
+/**
+ * Mainly used to store task data and manage database operations
+ * Task class has direct communication with the TaskHelper so that it can update values on the fly.
+ */
 public class Task {
     private final int id;
     private String taskName;

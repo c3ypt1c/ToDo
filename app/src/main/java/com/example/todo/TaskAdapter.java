@@ -25,7 +25,7 @@ public class TaskAdapter extends
         RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
     private ArrayList<Task> AllTasks; // Storage for tasks
-    private ArrayList<Task> IncompleteTasks; // Storage for incomplete tasks
+    private ArrayList<Task> IncompleteTasks; // Storage for incomplete tasks (they have to be displayed differently sometimes)
     private final View view;
     private final MainMenu fragment;
     private final FragmentManager fragmentManager;
@@ -61,6 +61,7 @@ public class TaskAdapter extends
         }
 
         public void Expand() {
+            // Show elements and change arrow
             for(View element : taskAdapter.isLandscape ? collapsableLandscape : collapsable) element.setVisibility(View.VISIBLE);
             expand.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
 
@@ -72,6 +73,7 @@ public class TaskAdapter extends
         }
 
         public void Collapse() {
+            // Hide elements and change arrow
             for (View element : taskAdapter.isLandscape ? collapsableLandscape : collapsable) element.setVisibility(View.GONE);
             expand.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
         }
@@ -110,7 +112,6 @@ public class TaskAdapter extends
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.recycler_item_task_entry, parent, false);
-
         return new TaskViewHolder(view, this);
     }
 
@@ -188,6 +189,7 @@ public class TaskAdapter extends
                 alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        // delete on confirm
                         currentTask.Delete();
                         Toast toast = Toast.makeText(view.getContext(), "Task deleted!", Toast.LENGTH_SHORT);
                         toast.show();
