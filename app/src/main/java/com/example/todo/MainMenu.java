@@ -10,7 +10,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,7 +52,7 @@ public class MainMenu extends Fragment {
         // Get saved data
         tasksHelper = new TasksHelper(getContext());
         boolean showCompleted = sharedPreferences.getBoolean("showCompletedTasks", false);
-
+        boolean displayCollapse = sharedPreferences.getBoolean("displayCollapse", true);
 
         // Set up RecyclerView and TaskAdapter
         recyclerView = view.findViewById(R.id.activity_main_recycler_view);
@@ -72,6 +71,8 @@ public class MainMenu extends Fragment {
         // Set values for menu
         Menu menu = toolbar.getMenu();
         menu.findItem(R.id.menu_show_finished).setChecked(showCompleted);
+
+        menu.findItem(R.id.menu_toggle_all).setTitle(getString( displayCollapse ? R.string.menu_collapse_all : R.string.menu_expand_all));
 
         // Add listener to menus
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -94,7 +95,7 @@ public class MainMenu extends Fragment {
 
                     case R.id.menu_remove_finished: //TODO needs alert
                         // Remove all finished tasks
-                        tasksHelper.RemovedAllFinishedTasks();
+                        tasksHelper.RemoveAllFinishedTasks();
                         updateRecycler();
                         return true;
 
@@ -105,7 +106,19 @@ public class MainMenu extends Fragment {
                         return true;
 
                     case R.id.menu_toggle_all:
+                        // Get value and save user choice
+                        boolean displayCollapse = sharedPreferences.getBoolean("displayCollapse", true);
+                        displayCollapse = !displayCollapse;
+                        editor.putBoolean("displayCollapse", displayCollapse);
+                        editor.apply();
 
+                        // Set the string in the menu
+                        menu.findItem(R.id.menu_toggle_all).setTitle(getString(displayCollapse ? R.string.menu_collapse_all : R.string.menu_expand_all));
+
+                        // Perform action
+
+
+                        return true;
 
                     default:
                         return false;

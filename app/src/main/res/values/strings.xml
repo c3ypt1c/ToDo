@@ -33,10 +33,10 @@
     <string name="menu_show_finished">Show Finished</string>
     <string name="menu_remove_all">Remove All</string>
     <string name="menu_remove_finished">Remove Finished Tasks</string>
+    <string name="menu_collapse_all">Collapse All</string>
+    <string name="menu_expand_all">Expand All</string>
 
     <!-- Misc -->
     <string name="todo">TODO</string>
-    <string name="menu_collapse_all">Collapse All</string>
-
 
 </resources>

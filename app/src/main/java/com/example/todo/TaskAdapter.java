@@ -12,9 +12,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
@@ -32,7 +30,6 @@ public class TaskAdapter extends
     private final MainMenu fragment;
     private final FragmentManager fragmentManager;
     private boolean showCompleted;
-    private final TaskAdapter taskAdapter;
 
     final static class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -44,7 +41,6 @@ public class TaskAdapter extends
         public final AppCompatImageButton delete;
         public final View itemView;
         public final View[] collapsable;
-        public boolean expanded = false;
         final TaskAdapter taskAdapter;
 
         public TaskViewHolder(@NonNull View itemView, TaskAdapter taskAdapter) {
@@ -60,6 +56,22 @@ public class TaskAdapter extends
             collapsable = new View[] {desc, descTitle, delete}; //Add collapsable-s here
             this.taskAdapter = taskAdapter;
         }
+
+        public void Expand() {
+            for(View element : collapsable) element.setVisibility(View.VISIBLE);
+            expand.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
+
+            // Hide the description if the description is empty
+            if(desc.getText().toString().length() == 0) {
+                descTitle.setVisibility(View.GONE);
+                desc.setVisibility(View.GONE);
+            }
+        }
+
+        public void Collapse() {
+            for(View element : collapsable) element.setVisibility(View.GONE);
+            expand.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
+        }
     }
 
     public TaskAdapter(View view, MainMenu fragment, FragmentManager fm, ArrayList<Task> Tasks, boolean showCompleted) {
@@ -68,7 +80,6 @@ public class TaskAdapter extends
         this.fragmentManager = fm;
         this.showCompleted = showCompleted;
         this.AllTasks = Tasks;
-        this.taskAdapter = this;
         SetCompleted(showCompleted);
     }
 
@@ -101,25 +112,27 @@ public class TaskAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.TaskViewHolder holder, int position) {
+        // Set internals
         Task currentTask = (!showCompleted ? IncompleteTasks : AllTasks).get(position);
-
-        Log.w("TaskAdapter:onBindViewHolder", "onBindViewHolder: Bound" + position + " to " + currentTask.getTaskName());
+        Log.w("TASKSSSS:", currentTask.toString());
 
         // Set initial data
         holder.done.setChecked(currentTask.isDone());
         holder.title.setText(currentTask.getTaskName());
         holder.desc.setText(currentTask.getTaskDesc());
 
+        // Set saved expand status
+        if(currentTask.getExpand()) holder.Expand();
+        else holder.Collapse();
+        view.requestLayout();
 
         // Add listeners
         // On check
         holder.done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentTask.toggleDone();
-
                 // Update List
-                if(currentTask.isDone()) {
+                if(currentTask.toggleDone()) {
                     IncompleteTasks.remove(currentTask);
                 } else {
                     IncompleteTasks.add(currentTask);
@@ -134,11 +147,8 @@ public class TaskAdapter extends
             @SuppressLint("ApplySharedPref")
             @Override
             public void onClick(View v) {
-                Log.w("AAAAAA", "onClick: Clicked!");
-
                 SharedPreferences sharedPreferences = view.getContext().getSharedPreferences("internal_temporary", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                Log.w("AAAAAA", "onClick: adding to last_edit_id: " + currentTask.getId());
                 editor.putInt("last_edit_id", currentTask.getId());
                 editor.commit();
 
@@ -150,21 +160,9 @@ public class TaskAdapter extends
         holder.expand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!holder.expanded) {
-                    for(View element : holder.collapsable) element.setVisibility(View.VISIBLE);
-                    holder.expand.setImageResource(R.drawable.ic_baseline_arrow_drop_up_24);
+                if(currentTask.toggleExpand()) holder.Expand();
+                else holder.Collapse();
 
-                    // Hide the description if the description is empty
-                    if(currentTask.getTaskDesc().length() == 0) {
-                        holder.descTitle.setVisibility(View.GONE);
-                        holder.desc.setVisibility(View.GONE);
-                    }
-
-                } else {
-                    for(View element : holder.collapsable) element.setVisibility(View.GONE);
-                    holder.expand.setImageResource(R.drawable.ic_baseline_arrow_drop_down_24);
-                }
-                holder.expanded = !holder.expanded;
                 view.requestLayout();
             }
         });

@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class TasksHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_TABLE = "tasksDB";
     private static final String DATABASE_NAME = "tasks";
     private static final String TAG = "Database";
@@ -21,7 +21,7 @@ public class TasksHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String database_table = "CREATE TABLE " + DATABASE_TABLE + " ( id INTEGER PRIMARY KEY, task TEXT, task_desc TEXT, done INTEGER )";
+        String database_table = "CREATE TABLE " + DATABASE_TABLE + " ( id INTEGER PRIMARY KEY, task TEXT, task_desc TEXT, done INTEGER, expand INTEGER )";
         Log.d(TAG, "Made database");
         db.execSQL(database_table);
     }
@@ -45,7 +45,8 @@ public class TasksHelper extends SQLiteOpenHelper {
                 String taskName = cursor.getString(1); // Title/Name
                 String taskDesk = cursor.getString(2); // Description
                 boolean taskDone = cursor.getInt(3) == 1; // Completed?: 1 is done
-                Task task = new Task(taskID, taskName, taskDesk, taskDone, this);
+                boolean taskExpand = cursor.getInt(4) == 1; // Expanded?: 1 is yes
+                Task task = new Task(taskID, taskName, taskDesk, taskDone, taskExpand, this);
                 Log.d(TAG, "Tasks task: \n" + task.toString());
                 Tasks.add(task);
             } while (cursor.moveToNext());
@@ -61,12 +62,13 @@ public class TasksHelper extends SQLiteOpenHelper {
         db.update(DATABASE_TABLE, values, "id = ?", new String[] {String.valueOf(id)});
     }
 
-    public void AddTask(String name, String desc, boolean done) {
+    public void AddTask(String name, String desc, boolean done, boolean expanded) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("task", name);
         contentValues.put("task_desc", desc);
         contentValues.put("done", done ? 1 : 0); // 1 is done
+        contentValues.put("expand", expanded ? 1 : 0); // 1 is expanded
         db.insert(DATABASE_TABLE, null, contentValues);
         Log.d(TAG, "Task added");
     }
@@ -83,7 +85,8 @@ public class TasksHelper extends SQLiteOpenHelper {
         String taskName = cursor.getString(1); // Title/Name
         String taskDesk = cursor.getString(2); // Description
         boolean taskDone = cursor.getInt(3) == 1; // Completed?: 1 is done
-        Task task = new Task(taskID, taskName, taskDesk, taskDone, this);
+        boolean taskExpand = cursor.getInt(4) == 1; // Expanded?: 1 is yes
+        Task task = new Task(taskID, taskName, taskDesk, taskDone, taskExpand, this);
 
         cursor.close();
         return task;
@@ -95,7 +98,7 @@ public class TasksHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void RemovedAllFinishedTasks() {
+    public void RemoveAllFinishedTasks() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(DATABASE_TABLE, "done = 1", null);
     }
@@ -103,5 +106,11 @@ public class TasksHelper extends SQLiteOpenHelper {
     public void RemoveTaskById(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(DATABASE_TABLE, "id = '" + id + "'", null);
+    }
+
+    public void SetExpandStatus(boolean expand) {
+        for (Task task : getAllTasks()) {
+            task.setExpand(expand);
+        }
     }
 }

@@ -8,13 +8,15 @@ public class Task {
     private String taskName;
     private String taskDesc;
     private boolean done;
+    private boolean expand;
     private final TasksHelper tasksHelper;
 
-    public Task(int id, String taskName, String taskDesk, boolean done, TasksHelper tasksHelper) {
+    public Task(int id, String taskName, String taskDesk, boolean done, boolean expand, TasksHelper tasksHelper) {
         this.id = id;
         this.taskName = taskName;
         this.taskDesc = taskDesk;
         this.done = done;
+        this.expand = expand;
         this.tasksHelper = tasksHelper;
     }
 
@@ -23,6 +25,7 @@ public class Task {
         contentValues.put("task", taskName);
         contentValues.put("task_desc", taskDesc);
         contentValues.put("done", done ? 1 : 0); // 1 is done
+        contentValues.put("expand", expand ? 1 : 0); // 1 is expand
         return contentValues;
     }
 
@@ -61,6 +64,20 @@ public class Task {
         update();
     }
 
+    public void setExpand(boolean expand) {
+        this.expand = expand;
+        update();
+    }
+
+    public boolean toggleExpand() {
+        setExpand(!getExpand());
+        return getExpand();
+    }
+
+    public boolean getExpand() {
+        return this.expand;
+    }
+
     public boolean toggleDone() {
         setDone(!isDone());
         return isDone();
@@ -69,10 +86,11 @@ public class Task {
     @NonNull
     @Override
     public String toString() {
-        return "Task id: " + id + "\n" +
-                "Task: " + taskName + "\n" +
-                "Task desc: " + taskDesc + "\n" +
-                "Task done: " + done + "\n";
+        return  "Task id:       " + id + "\n" +
+                "Task:          " + taskName + "\n" +
+                "Task desc:     " + taskDesc + "\n" +
+                "Task done:     " + done + "\n" +
+                "Task expanded: " + expand;
     }
 
     public void Delete() {

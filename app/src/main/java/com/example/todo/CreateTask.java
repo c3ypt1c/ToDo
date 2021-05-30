@@ -71,7 +71,7 @@ public class CreateTask extends Fragment {
 
                 //Input into database
                 TasksHelper tasksHelper = new TasksHelper(getContext());
-                tasksHelper.AddTask(titleText, descriptionText, completed);
+                tasksHelper.AddTask(titleText, descriptionText, completed, false);
 
                 view.clearFocus(); //Remove keyboard from view
                 Navigation.findNavController(view).popBackStack(R.id.createTask, true);
