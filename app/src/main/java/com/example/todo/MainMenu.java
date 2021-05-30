@@ -90,7 +90,6 @@ public class MainMenu extends Fragment {
                         // Reload recycler view
                         taskAdapter.SetCompleted(item.isChecked());
                         updateRecycler();
-
                         return true;
 
                     case R.id.menu_remove_finished: //TODO needs alert
@@ -116,8 +115,8 @@ public class MainMenu extends Fragment {
                         menu.findItem(R.id.menu_toggle_all).setTitle(getString(displayCollapse ? R.string.menu_collapse_all : R.string.menu_expand_all));
 
                         // Perform action
-
-
+                        tasksHelper.SetExpandStatus(displayCollapse);
+                        updateRecycler();
                         return true;
 
                     default:
