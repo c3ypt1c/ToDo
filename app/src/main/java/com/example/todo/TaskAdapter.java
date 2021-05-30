@@ -29,7 +29,7 @@ public class TaskAdapter extends
     private ArrayList<Task> AllTasks; // Storage for tasks
     private ArrayList<Task> IncompleteTasks; // Storage for incomplete tasks
     private final View view;
-    private final Fragment fragment;
+    private final MainMenu fragment;
     private final FragmentManager fragmentManager;
     private boolean showCompleted;
     private final TaskAdapter taskAdapter;
@@ -62,7 +62,7 @@ public class TaskAdapter extends
         }
     }
 
-    public TaskAdapter(View view, Fragment fragment, FragmentManager fm, ArrayList<Task> Tasks, boolean showCompleted) {
+    public TaskAdapter(View view, MainMenu fragment, FragmentManager fm, ArrayList<Task> Tasks, boolean showCompleted) {
         this.view = view;
         this.fragment = fragment;
         this.fragmentManager = fm;
@@ -125,12 +125,7 @@ public class TaskAdapter extends
                     IncompleteTasks.add(currentTask);
                 }
 
-                // Notify
-                if(!showCompleted) {
-                    taskAdapter.notifyItemRemoved(position);
-                    taskAdapter.notifyItemChanged(position, getItemCount());
-                    taskAdapter.notifyDataSetChanged();
-                }
+                if(!showCompleted) fragment.updateRecycler();
             }
         });
 

@@ -24,6 +24,11 @@ import androidx.appcompat.widget.Toolbar;
  */
 public class MainMenu extends Fragment {
 
+    TaskAdapter taskAdapter;
+    RecyclerView recyclerView;
+    TasksHelper tasksHelper;
+    TextView empty;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +53,16 @@ public class MainMenu extends Fragment {
             );
 
         // Get Data
-        TasksHelper tasksHelper = new TasksHelper(getContext());
+        tasksHelper = new TasksHelper(getContext());
 
         // Set up RecyclerView and TaskAdapter
-        RecyclerView recyclerView = view.findViewById(R.id.activity_main_recycler_view);
-        TaskAdapter taskAdapter = new TaskAdapter(view, this, getParentFragmentManager(), tasksHelper.getAllTasks(), false);
+        recyclerView = view.findViewById(R.id.activity_main_recycler_view);
+        taskAdapter = new TaskAdapter(view, this, getParentFragmentManager(), tasksHelper.getAllTasks(), false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(taskAdapter);
 
         // TextView for empty tasks
-        TextView empty = view.findViewById(R.id.activity_main_empty_indicator_text_view);
+        empty = view.findViewById(R.id.activity_main_empty_indicator_text_view);
         if(taskAdapter.getItemCount() > 0) empty.setVisibility(View.GONE);
 
         // Add menu to toolbar
@@ -81,20 +86,20 @@ public class MainMenu extends Fragment {
 
                         // Reload recycler view
                         taskAdapter.SetCompleted(item.isChecked());
-                        updateRecycler(taskAdapter, recyclerView, tasksHelper, empty);
+                        updateRecycler();
 
                         return true;
 
                     case R.id.menu_remove_finished: //TODO needs alert
                         // Remove all finished tasks
                         tasksHelper.RemovedAllFinishedTasks();
-                        updateRecycler(taskAdapter, recyclerView, tasksHelper, empty);
+                        updateRecycler();
                         return true;
 
                     case R.id.menu_remove_all:
                         // Remove all tasks
                         tasksHelper.RemoveAllTasks();
-                        updateRecycler(taskAdapter, recyclerView, tasksHelper, empty);
+                        updateRecycler();
                         return true;
 
                     default:
@@ -108,7 +113,7 @@ public class MainMenu extends Fragment {
         return view;
     }
 
-    void updateRecycler(TaskAdapter taskAdapter, RecyclerView recyclerView, TasksHelper tasksHelper, TextView empty) {
+    void updateRecycler() {
         taskAdapter.UpdateTaskList(tasksHelper.getAllTasks());
         taskAdapter.notifyDataSetChanged();
         recyclerView.forceLayout();
