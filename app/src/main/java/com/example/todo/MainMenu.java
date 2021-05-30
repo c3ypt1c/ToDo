@@ -1,11 +1,14 @@
 package com.example.todo;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 /**
@@ -92,18 +97,54 @@ public class MainMenu extends Fragment {
                         updateRecycler();
                         return true;
 
-                    case R.id.menu_remove_finished: //TODO needs alert
-                        // Remove all finished tasks
-                        tasksHelper.RemoveAllFinishedTasks();
-                        updateRecycler();
-                        return true;
+                    case R.id.menu_remove_finished: {
+                        // Make confirmation dialog
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
 
-                    case R.id.menu_remove_all:
-                        // Remove all tasks
-                        tasksHelper.RemoveAllTasks();
-                        updateRecycler();
+                        alertDialogBuilder.setTitle("Confirm Delete?");
+                        alertDialogBuilder.setMessage("Are you sure you would like to delete all finished tasks?");
+                        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Remove all finished tasks
+                                Toast toast = Toast.makeText(view.getContext(), "Tasks deleted!", Toast.LENGTH_SHORT);
+                                toast.show();
+                                tasksHelper.RemoveAllFinishedTasks();
+                                updateRecycler();
+                            }
+                        });
+                        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            } // Do nothing
+                        });
+                        alertDialogBuilder.create().show();
                         return true;
+                    }
+                    case R.id.menu_remove_all: {
+                        // Make confirmation dialog
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
 
+                        alertDialogBuilder.setTitle("Confirm Delete?");
+                        alertDialogBuilder.setMessage("Are you sure you would like to delete ALL tasks?");
+                        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Remove all finished tasks
+                                Toast toast = Toast.makeText(view.getContext(), "All tasks deleted!", Toast.LENGTH_SHORT);
+                                toast.show();
+                                tasksHelper.RemoveAllTasks();
+                                updateRecycler();
+                            }
+                        });
+                        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            } // Do nothing
+                        });
+                        alertDialogBuilder.create().show();
+                        return true;
+                    }
                     case R.id.menu_toggle_all:
                         // Get value and save user choice
                         boolean displayCollapse = sharedPreferences.getBoolean("displayCollapse", true);
